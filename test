@@ -1,0 +1,53 @@
+
+
+"Lembrar de colocar o self antes de session nos códigos SAP se for o caso"
+
+import sys
+import time
+import subprocess
+from pip import main
+import win32com.client
+from tkinter import *
+from tkinter import messagebox
+
+class SapGui(object):
+   def __init__(self):
+      self.path = r"caminho instalação do SAP aqui"
+      subprocess.Popen(self.path)
+
+      self.SapGuiAuto = win32com.client.GetObject("SAPGUI")
+      application = self.SapGuiAuto.GetScriptingEngine
+
+      #A seguir deve-se colocar o nome da conexão com o SAP
+      self.connection = application.OpenConnection("BMF [ecc1.ddns.net]", True)
+      time.sleep(3)
+      self.session = self.connection.Children(0)
+      self.session.findById("wnd[0]").maximize
+
+   def sapLogin(self):
+      try:
+         self.session.findById("wnd[0]/usr/ttxtRSYST-MANDT").text = "800"
+         self.session.findById("wnd[0]/usr/ttxtRSYST-BNAME").text = "usuario"
+         self.session.findById("wnd[0]/usr/ttxtRSYST-BCODE").text = "senha"
+         self.session.findById("wnd[0]/usr/ttxtRSYST-LANGU").text = "PT"
+         self.session.findById("wnd[0]").sendVKey(0)
+      
+      except:
+         print(sys.exc_info()[0])
+      
+      time.sleep(2)
+      self.register_suoolier()
+
+   def register_supplier():
+      messagebox.showinfo("showinfo", "Transação realizada com sucesso!")
+      pass
+      # inserir aqui o códogo SAP da transação com o self antes dos 'session'
+
+
+if __name__ == '__main__':
+   window = Tk()
+   window.geometry("200x50")
+   botao = Button(window, text="Login SAP", command=lambda : SapGui().saplogin())
+   botao.pack()
+
+   mainloop()
